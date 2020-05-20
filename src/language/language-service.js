@@ -52,7 +52,14 @@ const LanguageService = {
     }
     return sll;
   },
-  serialize: async function (db, sll) {
+
+  // languageStuff: async function(db, score) {
+  //   let trx = await db.transaction();
+  //   try {
+
+  //   }
+  // },
+  serialize: async function (db, sll, userlang) {
     let trx = await db.transaction();
     try {
       let curr = sll.head;
@@ -72,11 +79,10 @@ const LanguageService = {
           .where({ id: curr.value.id });
         curr = curr.next;
       }
-      let lang = { head: sll.head.value.id };
-      await db("language")
-        .transacting(trx)
-        .update(lang)
-        .where({ id: sll.head.value.language_id });
+      let lang = { head: sll.head.value.id, total_score: userlang.total_score };
+      await db("language").transacting(trx).update(lang).where({
+        id: sll.head.value.language_id,
+      });
       await trx.commit();
     } catch (e) {
       console.log(e);
