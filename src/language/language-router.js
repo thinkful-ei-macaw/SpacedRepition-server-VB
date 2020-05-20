@@ -54,7 +54,6 @@ languageRouter.get("/head", requireAuth, async (req, res, next) => {
       wordCorrectCount: nextWord[0].correct_count,
       wordIncorrectCount: nextWord[0].incorrect_count,
     });
-    next();
   } catch (error) {
     next(error);
   }
@@ -66,27 +65,43 @@ languageRouter.post(
   requireAuth,
   async (req, res, next) => {
     if (!req.body.guess) {
-      res.status(400).send({ error: "Missing 'guess' in request body" });
+      return res.status(400).send({ error: "Missing 'guess' in request body" });
     }
     try {
       const nextWord = await LanguageService.getLanguageWords(
         req.app.get("db"),
         req.language.id
       );
+      console.log(nextWord);
       const wordsList = LanguageService.createWordList(nextWord);
-      console.log(wordsList);
       if (req.body.guess !== wordsList.head.value.translation) {
+        // wordsList.head.value.incorrect_count =
+        //   wordsList.head.value.incorrect_count + 1;
+        // while(wordsList.head.next !== null )
+        wordsList.head.value.incorrect_count =
+          wordsList.head.value.incorrect_count + 1;
+        let currentNode = wordsList.head;
+
+        wordsList.remove(currentNode.value);
+        wordsList.insertAt(2, currentNode.value);
+        await LanguageService.serialize(req.app.get("db"), wordsList);
         res.json({
-          nextWord: wordsList.head.next.value.original,
+          nextWord: wordsList.head.value.original,
           totalScore: req.language.total_score,
           wordCorrectCount: wordsList.head.value.correct_count,
-          wordIncorrectCount: wordsList.head.value.incorrect_count++,
-          answer: wordsList.head.value.translation,
+          wordIncorrectCount: wordsList.head.value.incorrect_count,
+          answer: currentNode.value.translation,
           isCorrect: false,
         });
 
-        res.status(200).send();
-        next();
+        // return res.status(200).send().json({
+        //   nextWord: wordsList.head.next.value.original,
+        //   totalScore: req.language.total_score,
+        //   wordCorrectCount: wordsList.head.value.correct_count,
+        //   wordIncorrectCount: wordsList.head.value.incorrect_count,
+        //   answer: wordsList.head.value.translation,
+        //   isCorrect: false,
+        // });
       }
       if (req.body.guess === nextWord[0].translation) {
         res.json({
