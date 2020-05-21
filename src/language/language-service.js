@@ -36,20 +36,20 @@ const LanguageService = {
     // nextWerd = all the words from the "word" table,
     // for the given language
     const sll = new LinkedList();
-  
+
     // find the head of the list, and insert into LL
     // select * from word where id={word.head}
     let head = nextWerd.find((word) => word.id === word.head);
     console.log("weee", head);
     sll.insertFirst(head);
-    //find word that is equal to the head's next value 
+    //find word that is equal to the head's next value
     // select * from word where id={head.next}
     let next = nextWerd.find((word) => word.id === head.next);
 
     while (next) {
       sll.insertLast(next);
       //find next word that matches the id from next column
-      
+
       // select * from word where id={next.next}
       //if next.next is null find will return null to exit loop
       next = nextWerd.find((word) => word.id === next.next);
@@ -65,7 +65,8 @@ const LanguageService = {
     try {
       let curr = sll.head;
 
-      while (curr && curr.next) { // iterate thru linked list
+      while (curr && curr.next) {
+        // iterate thru linked list
         let newNode = {
           next: curr.next.value.id,
           incorrect_count: curr.value.incorrect_count,
@@ -88,8 +89,8 @@ const LanguageService = {
       // Successful, let's commit everything
       await trx.commit(); // COMMIT;
     } catch (e) {
-      console.log(e);
       // Something failed, undo all changes
+      console.log(e);
       await trx.rollback(); // ROLLBACK;
     }
   },
