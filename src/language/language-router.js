@@ -69,7 +69,7 @@ languageRouter.post(
     }
     try {
       //get all words from database
-      const nextWord = await LanguageService.getLanguageWords(
+      const allWords = await LanguageService.getLanguageWords(
         req.app.get("db"),
         req.language.id
       );
@@ -79,11 +79,15 @@ languageRouter.post(
         req.language.user_id
       );
       //convert all words into a linked list
-      const wordsList = LanguageService.createWordList(nextWord);
+      const wordsList = LanguageService.createWordList(
+        allWords,
+        req.language.head
+      );
       let answer;
       let currentNode = wordsList.head;
       // TODO: PRINT OUT the linked list
       //if guess is not correct
+      wordsList.displayList();
       if (req.body.guess !== wordsList.head.value.translation) {
         /*
         * = word we're on
@@ -102,13 +106,15 @@ languageRouter.post(
         wordsList.insertAt(currentNode.value.memory_value, currentNode.value);
       }
       if (req.body.guess === wordsList.head.value.translation) {
-        let value = wordsList.head.value.memory_value;
-        wordsList.head.value.correct_count =
-          wordsList.head.value.correct_count + 1;
-        wordsList.head.value.memory_value = value === 1 ? value + 2 : value * 2;
-        userLang.total_score = userLang.total_score + 1;
+        wordsList.head.value.correct_count += 1;
+        wordsList.head.value.memory_value *= 2;
+        userLang.total_score += 1;
         answer = true;
+        if (wordsList.head.value.memory_value >= allWords.length) {
+          wordsList.head.value.memory_value = allWords.length - 1;
+        }
         wordsList.remove(currentNode.value);
+        console.log(currentNode.value.memory_value);
         wordsList.insertAt(currentNode.value.memory_value, currentNode.value);
       }
       // TODO: print out linked list again

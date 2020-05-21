@@ -19,28 +19,26 @@ const LanguageService = {
     return db
       .from("word")
       .select(
-        "word.id",
+        "id",
         "language_id",
         "original",
         "translation",
         "next",
         "memory_value",
         "correct_count",
-        "incorrect_count",
-        "language.head"
+        "incorrect_count"
       )
-      .join("language", "language.id", "=", "word.language_id")
       .where({ language_id });
   },
-  createWordList(nextWerd) {
+  createWordList(nextWerd, headId) {
     // nextWerd = all the words from the "word" table,
     // for the given language
+
     const sll = new LinkedList();
 
     // find the head of the list, and insert into LL
     // select * from word where id={word.head}
-    let head = nextWerd.find((word) => word.id === word.head);
-    console.log("weee", head);
+    let head = nextWerd.find((word) => word.id === headId);
     sll.insertFirst(head);
     //find word that is equal to the head's next value
     // select * from word where id={head.next}
@@ -65,15 +63,15 @@ const LanguageService = {
     try {
       let curr = sll.head;
 
-      while (curr && curr.next) {
+      while (curr) {
         // iterate thru linked list
         let newNode = {
-          next: curr.next.value.id,
+          next: curr.next ? curr.next.value.id : null,
           incorrect_count: curr.value.incorrect_count,
           correct_count: curr.value.correct_count,
           memory_value: curr.value.memory_value,
         };
-
+        // console.log(newNode);
         // UPDATE word set next=?,incorrect_count=? where id={curr.value.id};
         await db("word")
           .transacting(trx)
