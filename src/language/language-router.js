@@ -122,7 +122,7 @@ languageRouter.post(
       // Update everything in the database, based on the linked-list `wordList`
       await LanguageService.serialize(req.app.get("db"), wordsList, userLang);
       res.json({
-        currentWord: currentNode.head.value.original,
+        currentWord: currentNode.value.original,
         nextWord: wordsList.head.value.original,
         totalScore: userLang.total_score,
         wordCorrectCount: wordsList.head.value.correct_count,
