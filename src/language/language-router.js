@@ -49,7 +49,8 @@ languageRouter.get("/head", requireAuth, async (req, res, next) => {
     );
 
     res.json({
-      nextWord: nextWord[0].original,
+      currentWord: nextWord[0].original,
+      nextWord: nextWord[1].original,
       totalScore: req.language.total_score,
       wordCorrectCount: nextWord[0].correct_count,
       wordIncorrectCount: nextWord[0].incorrect_count,
