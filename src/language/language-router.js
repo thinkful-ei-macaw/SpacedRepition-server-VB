@@ -68,19 +68,32 @@ languageRouter.post(
       return res.status(400).send({ error: "Missing 'guess' in request body" });
     }
     try {
+      //get all words from database
       const nextWord = await LanguageService.getLanguageWords(
         req.app.get("db"),
         req.language.id
       );
+      //get language of user
       const userLang = await LanguageService.getUsersLanguage(
         req.app.get("db"),
         req.language.user_id
       );
-      console.log("heheheheifhefiveve", userLang);
+      //convert all words into a linked list
       const wordsList = LanguageService.createWordList(nextWord);
       let answer;
       let currentNode = wordsList.head;
+      // TODO: PRINT OUT the linked list
+      //if guess is not correct
       if (req.body.guess !== wordsList.head.value.translation) {
+        /*
+        * = word we're on
+                  *
+        A -> B -> C -> D
+            to
+        A -> C -> B -> D
+        memory value the ones you guess incorrect is what you will see more often
+        will organize lowest memory value to highest memory value 
+        */
         wordsList.head.value.incorrect_count =
           wordsList.head.value.incorrect_count + 1;
         wordsList.head.value.memory_value = 1;
@@ -98,7 +111,9 @@ languageRouter.post(
         wordsList.remove(currentNode.value);
         wordsList.insertAt(currentNode.value.memory_value, currentNode.value);
       }
+      // TODO: print out linked list again
 
+      // Update everything in the database, based on the linked-list `wordList`
       await LanguageService.serialize(req.app.get("db"), wordsList, userLang);
       res.json({
         nextWord: wordsList.head.value.original,
