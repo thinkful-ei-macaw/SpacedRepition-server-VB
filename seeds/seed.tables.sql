@@ -28,8 +28,8 @@ VALUES
   (5, 1, 'sonrier', 'smile', 6),
   (6, 1, 'gracias', 'thank you', 7),
   (7, 1, 'perro', 'dog', 8),
-  (8, 1, 'almuerzo', 'lunch', 9)
-  (9, 1, 'desayuno', 'breakfast', 10)
+  (8, 1, 'almuerzo', 'lunch', 9),
+  (9, 1, 'desayuno', 'breakfast', 10),
   (10, 1, 'gato', 'cat', null);
 
 UPDATE "language" SET head = 1 WHERE id = 1;
