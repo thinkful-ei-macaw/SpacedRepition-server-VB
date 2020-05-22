@@ -1,56 +1,107 @@
 # Spaced repetition API!
 
-# NECESSARY CHANGES BEFORE DEPLOYMENT: BD_URL back to normal DB name, change hapiness to happiness
+# Spaced repetition Server
 
-## Local dev setup
+## Introduction
 
-If using user `dunder-mifflin`:
+- Learning spanish one word at a time.
 
-```bash
-mv example.env .env
-createdb -U dunder-mifflin spaced-repetition
-createdb -U dunder-mifflin spaced-repetition-test
-```
+- Learn in repetition.
 
-If your `dunder-mifflin` user has a password be sure to set it in `.env` for all appropriate fields. Or if using a different user, update appropriately.
+- This is a spanish translator app, that has been produced utilizing a linked list data structure, and a specific algorithm mentioned above
 
-```bash
-npm install
-npm run migrate
-env MIGRATION_DB_NAME=spaced-repetition-test npm run migrate
-```
+- You will see the words you get wrong more often to get more practice.
 
-And `npm test` should work at this point
+- The user can see their current total score, how many times they have gotten a word wrong and right. As well as a nice message congratulating the user
 
-## Configuring Postgres
+## heroku link:
 
-For tests involving time to run properly, configure your Postgres database to run in the UTC timezone.
+https://spaced-repetition-api-vb.herokuapp.com/
 
-1. Locate the `postgresql.conf` file for your Postgres installation.
-   1. E.g. for an OS X, Homebrew install: `/usr/local/var/postgres/postgresql.conf`
-   2. E.g. on Windows, _maybe_: `C:\Program Files\PostgreSQL\11.2\data\postgresql.conf`
-   3. E.g on Ubuntu 18.04 probably: '/etc/postgresql/10/main/postgresql.conf'
-2. Find the `timezone` line and set it to `UTC`:
+## link to live app:
 
-```conf
-# - Locale and Formatting -
+https://spaced-repetition-three.now.sh/
 
-datestyle = 'iso, mdy'
-#intervalstyle = 'postgres'
-timezone = 'UTC'
-#timezone_abbreviations = 'Default'     # Select the set of available time zone
-```
+## link to server repo:
 
-## Scripts
+https://github.com/thinkful-ei-macaw/SpacedRepition-server-VB
 
-Start the application `npm start`
+## link to client repo:
 
-Start nodemon for the application `npm run dev`
+https://github.com/thinkful-ei-macaw/SpacedRepition-client-VB
 
-Run the tests mode `npm test`
+## Partners: Vendy Prum and Brannen Petit
 
-Run the migrations up `npm run migrate`
+### Tech-Stack:
 
-Run the migrations down `npm run migrate -- 0`
+- ReactJs
+- NodeJs
+- Express
+- HTML
+- JSX
+- CSS
+- queue, linkedlist
+- heroku
+
+### API Docs:
+
+- POST
+  - REQUEST: https://spaced-repetition-api-vb.herokuapp.com/api/auth/token
+  - allows user's to login and get authorization token
+  - RESPONSE: 200 OK {
+    authToken: returns authToken
+    }
+- PUT
+  - REQUEST: https://spaced-repetition-api-vb.herokuapp.com/api/auth/
+  - Updates the user's auth token, this is a refreshing situation
+  - RESPONSE: 200 OK {
+    authToken: returns authToken
+    }
+- POST
+
+  - REQUEST: https://spaced-repetition-api-vb.herokuapp.com/api/users/
+  - Allows users to sign up on the app
+  - RESPONSE: 201 OK
+
+- GET
+
+  - REQUEST: https://spaced-repetition-api-vb.herokuapp.com/api/language/
+  - retrieves the user's words from the database to poplulate the dashboard
+  - RESPONSE: 200 {
+    langauge: 2,
+    words: ['felicidad', 'amor', 'etc..']
+    }
+
+  - GET
+  - REQUEST: https://spaced-repetition-api-vb.herokuapp.com/api/language/head
+  - retrieves the user next word to start practicing at the head of the linked-list
+  - RESPONSE: 200 {
+    currentWord: "felicidad",
+    nextWord: "hola",
+    totalScore: 10,
+    wordCorrectCount: 2,
+    wordIncorrectCount: 3,
+    }
+
+  - POST
+  - REQUEST: https://spaced-repetition-api-vb.herokuapp.com/api/language/guess
+  - interprets the users guess for the current word they are learning
+  - RESPONSE: 200 {
+    currentWord: "felicidad",
+    nextWord: "hola",
+    totalScore: 3,
+    wordCorrectCount: 2,
+    wordIncorrectCount: 3,
+    answer: "happiness,
+    isCorrect: True,
+    }
+
+### Summary
+
+- This app allows users to view their current spanish words, that they are attempting to learn
+- This apps allows users cycle through different words
+- This app allows users to submit a guess for each word in their list
+- This app provides the user feedback on whether or not they got a words translation correct or not
+- This app shows the user their total score and allows them to go back to the dashboard to see all their words
 
 # SpacedRepition-server-VB
