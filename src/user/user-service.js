@@ -53,13 +53,15 @@ const UserService = {
       const seq = await db.from("word_id_seq").select("last_value").first();
 
       const languageWords = [
-        ["felicidad", "hapiness", 2],
+        ["felicidad", "happiness", 2],
         ["hola", "hello", 3],
         ["amor", "love", 4],
         ["desarrollador", "developer", 5],
         ["sonrier", "smile", 6],
         ["gracias", "thank you", 7],
         ["perro", "dog", 8],
+        ["almuerzo", "lunch", 9],
+        ["desayuno", "breakfast", 10],
         ["gato", "cat", null],
       ];
 
