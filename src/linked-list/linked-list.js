@@ -315,20 +315,4 @@ class LinkedList {
   }
 }
 
-const SLL = new LinkedList();
-
-SLL.insertFirst("last");
-SLL.insertFirst("hello");
-SLL.insertFirst("hello");
-SLL.insertFirst("hello");
-SLL.insertFirst("hello");
-SLL.insertFirst("first");
-SLL.insertAt(6, "help us");
-console.log(JSON.stringify(SLL));
-
-// function makeWordList() {
-//     LanguageService.getLanguageWords()
-//   SLL.insertFirst;
-// }
-
 module.exports = LinkedList;
