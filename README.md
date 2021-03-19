@@ -1,4 +1,4 @@
-# Spaced repetition API!
+# Spaced repetition API
 
 # Spaced repetition Server
 
